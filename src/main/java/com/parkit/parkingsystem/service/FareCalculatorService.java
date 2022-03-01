@@ -29,5 +29,7 @@ public class FareCalculatorService {
 				throw new IllegalArgumentException("Unkown Parking Type");
 			}
 		}
+		if (ticket.isDiscount()) // appliquer une remise 5% pour les clients récurrents
+			ticket.setPrice(ticket.getPrice() * 95 / 100);
 	}
 }
