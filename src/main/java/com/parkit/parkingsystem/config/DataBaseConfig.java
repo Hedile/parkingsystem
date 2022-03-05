@@ -1,10 +1,13 @@
 package com.parkit.parkingsystem.config;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,12 +16,23 @@ public class DataBaseConfig {
 
 	private static final Logger logger = LogManager.getLogger("DataBaseConfig");
 
-	public Connection getConnection() throws ClassNotFoundException, SQLException {
+	public Connection getConnection() throws ClassNotFoundException, SQLException, IOException {
+		Properties prop = new Properties();
+		FileInputStream input = new FileInputStream("fileLocation/myproperties");
+		try {
+			prop.load(input);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			input.close();
+		}
+		String user = prop.getProperty("userName");
+		String password = prop.getProperty("password");
 		logger.info("Create DB connection");
 		Class.forName("com.mysql.cj.jdbc.Driver");
 		return DriverManager.getConnection(
-				"jdbc:mysql://localhost:3306/prod?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC", "root",
-				"rootroot");
+				"jdbc:mysql://localhost:3306/prod?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC", user,
+				password);
 
 	}
 
